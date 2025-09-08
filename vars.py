@@ -2,22 +2,22 @@ import os
 from os import environ
 
 # API Configuration
-API_ID = int(os.environ.get("API_ID", ""))
-API_HASH = os.environ.get("API_HASH", "")
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+API_ID = int(os.environ.get("API_ID", "25693368"))
+API_HASH = os.environ.get("API_HASH", "2dcf91b0f99c0b9d4875e87020e6bd07")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8137317794:AAGa3rhQ9WoH8mYlbuPnRcXkGd7UoD8mSbw")
 
-CREDIT = os.environ.get("CREDIT", "〱ＵＧ▕")
+CREDIT = os.environ.get("CREDIT", "『ASTRONAUT』")
 # MongoDB Configuration
-DATABASE_NAME = os.environ.get("DATABASE_NAME", "UGxPRO")
-DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://botexe:botexe@cluster0.pqc0ykw.mongodb.net/")
+DATABASE_NAME = os.environ.get("DATABASE_NAME", "manojrewa9876")
+DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://manojrewa9876_db_user:6DObg9qBxqhsKaTZ@cluster0.vwjrocl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 MONGO_URL = DATABASE_URL  # For auth system
 
 # Owner and Admin Configuration
-OWNER_ID = int(os.environ.get("OWNER_ID", "77"))
-ADMINS = [int(x) for x in os.environ.get("ADMINS", "774").split()]  # Default to owner ID
+OWNER_ID = int(os.environ.get("OWNER_ID", "5927517339"))
+ADMINS = [int(x) for x in os.environ.get("ADMINS", "5927517339").split()]  # Default to owner ID
 
 # Channel Configuration
-PREMIUM_CHANNEL = "https://t.me/+W-Q51EuLf2QwYTl"
+PREMIUM_CHANNEL = "https://t.me/+PQlqfkJE-4U2MWRk"
 # Thumbnail Configuration
 THUMBNAILS = list(map(str, os.environ.get("THUMBNAILS", "https://i.fbcd.co/products/original/ug-logo-designs-2-acbfbf7b80e16df4c902a34d1caf148e7e1feca736e21075114990e62294f3ac.jpg").split()))
 
@@ -59,3 +59,4 @@ Please contact the admin @ItsUGBot to get access.</blockquote>""",
 
 <blockquote>Use format: {format}</blockquote>"""
 }
+
