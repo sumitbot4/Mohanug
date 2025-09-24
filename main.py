@@ -683,7 +683,10 @@ async def txt_handler(bot: Client, m: Message):
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
             
             elif 'edge-cache-token' in url:
-                url = f"https://hls-proxy-7x6f.onrender.com/stream?url={url}"
+                url = f"https://hls-proxy-lucifer.onrender.com/stream?url={url}"
+
+elif 'appx-pdf-keyset' in url:
+                url = f"https://hls-proxy-lucifer.onrender.com/pdf?url={url}"
            
             if "acecwply" in url:
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
@@ -745,11 +748,7 @@ async def txt_handler(bot: Client, m: Message):
                 else:
                     base_url = url.split("?")[0]
                     url = base_url.replace("https://static-db-v2.classx.co.in", "https://appx-content-v2.classx.co.in")
-                elif 'edge-cache-token' in url:
-                url = f"https://hls-proxy-lucifer.onrender.com/stream?url={url}"
-elif 'appx-pdf-keyset' in url:
-                url = f"https://hls-proxy-lucifer.onrender.com/pdf?url={url}"
-
+                
             elif "classplusapp.com/drm/" in url:
                 print("\n🔐 Fetching DRM keys...")
                 api_url = apis["API_DRM"] + url
