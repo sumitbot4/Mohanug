@@ -78,7 +78,6 @@ if __name__ == "__main__":
     print("Enter ZIP URLs (one per line). Press ENTER twice when done:")
     urls = []
     while True:
-        line = input().strip()
         if not line:
             break
         urls.append(line)
