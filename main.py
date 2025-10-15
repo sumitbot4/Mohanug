@@ -682,7 +682,7 @@ async def txt_handler(bot: Client, m: Message):
                         text = await resp.text()
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
 
-            elif 'edge-cache-token' in url:
+            elif 'mkv' in url:
                 url = f"https://hls-proxy-lucifer.onrender.com/stream?url={url}"
             
             if "acecwply" in url:
