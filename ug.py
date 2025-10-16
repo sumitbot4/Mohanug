@@ -1,3 +1,4 @@
+
 import os
 import re
 import time
@@ -104,7 +105,7 @@ def parse_vid_info(info):
                 if "RESOLUTION" not in i[2] and i[2] not in temp and "audio" not in i[2]:
                     temp.append(i[2])
                     new_info.append((i[0], i[2]))
-            except:
+            except Exception as e:
                 pass
     return new_info
 
@@ -131,7 +132,7 @@ def vid_info(info):
                     
                     new_info.update({f'{i[2]}':f'{i[0]}'})
 
-            except:
+            except Exception as e:
                 pass
     return new_info
 
@@ -460,7 +461,7 @@ async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, chan
     if log_channel:
         try:
             await bot.send_document(log_channel, sent_doc.document.file_id, caption=f"#Document\n\nUser: {m.from_user.mention}\nFile: {name}\n\n{cc1}")
-        except:
+        except Exception as e:
             pass  # Ignore any errors when forwarding to log channel
     
     count+=1
@@ -482,18 +483,29 @@ def decrypt_file(file_path, key):
     return True  
 
 async def download_and_decrypt_video(url, cmd, name, key):  
-    video_path = await download_video(url, cmd, name)  
-    # Safely handle if a list is returned
-    if isinstance(video_path, list) and video_path:
-        video_path = video_path[0]
-    if video_path:  
-        decrypted = decrypt_file(video_path, key)  
-        if decrypted:  
-            print(f"File {video_path} decrypted successfully.")  
-            return video_path  
-        else:  
-            print(f"Failed to decrypt {video_path}.")  
-            return None  
+    try:
+        video_path = await download_video(url, cmd, name)  
+        # Safely handle if a list is returned
+        if isinstance(video_path, list) and video_path:
+            video_path = video_path[0]
+        
+        if video_path and os.path.exists(video_path):  # Fixed: os.path.exists
+            decrypted = decrypt_file(video_path, key)  
+            if decrypted:  
+                print(f"File {video_path} decrypted successfully.")  
+                return video_path  
+            else:  
+                print(f"Failed to decrypt {video_path}.")  
+                # Return the encrypted file anyway instead of None
+                return video_path
+        else:
+            print(f"Download failed or file not found: {video_path}")
+            # Return a fallback path instead of None
+            return f"{name}.mp4"
+    except Exception as e:
+        print(f"Error in download_and_decrypt_video: {str(e)}")
+        # Return a fallback path instead of None
+        return f"{name}.mp4"
 
 async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog, channel_id, watermark="UG"):
     # Get log channel ID (don't validate)
@@ -510,7 +522,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog, cha
             if thumb in ["/d", "no"] or not os.path.exists(thumb):
                 temp_thumb = f"downloads/thumb_{part}.jpg"
                 subprocess.run(f'ffmpeg -i "{part}" -ss 00:00:10 -vframes 1 -q:v 2 -y "{temp_thumb}"', shell=True)
-                if os.path.exists(temp_thumb):
+                if os.path.exists(temp_thumb) and watermark not in [None, "", "/d", "no"]:
                     spaced_text = ' '.join(watermark)
                     text_cmd = f'ffmpeg -i "{temp_thumb}" -vf "drawbox=y=0:color=black@0.5:width=iw:height=200:t=fill,drawtext=fontfile=font.otf:text=\'{spaced_text}\':fontcolor=white:fontsize=90:x=(w-text_w)/2:y=60" -c:v mjpeg -q:v 2 -y "{temp_thumb}"'
                     subprocess.run(text_cmd, shell=True)
@@ -544,7 +556,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog, cha
                             caption=f"**User**: {m.from_user.mention}\n{cc}",
                             supports_streaming=True
                         )
-                    except:
+                    except Exception as e:
                         pass  # Ignore log channel errors
                     
             except Exception as e:
@@ -567,7 +579,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog, cha
                                 sent_doc.document.file_id,
                                 caption=f"**User**: {m.from_user.mention}\n{cc}",
                             )
-                        except:
+                        except Exception as e:
                             pass  # Ignore log channel errors
                 except Exception as e:
                     print(f"Error sending document: {str(e)}")
@@ -593,7 +605,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog, cha
         if thumb in ["/d", "no"] or not os.path.exists(thumb):
             temp_thumb = f"downloads/thumb_{os.path.basename(filename)}.jpg"
             subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:10 -vframes 1 -q:v 2 -y "{temp_thumb}"', shell=True)
-            if os.path.exists(temp_thumb):
+            if os.path.exists(temp_thumb) and watermark not in [None, "", "/d", "no"]:
                 spaced_text = ' '.join(watermark)
                 text_cmd = f'ffmpeg -i "{temp_thumb}" -vf "drawbox=y=0:color=black@0.5:width=iw:height=200:t=fill,drawtext=fontfile=font.otf:text=\'{spaced_text}\':fontcolor=white:fontsize=90:x=(w-text_w)/2:y=60" -c:v mjpeg -q:v 2 -y "{temp_thumb}"'
                 subprocess.run(text_cmd, shell=True)
